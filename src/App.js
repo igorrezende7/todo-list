@@ -39,8 +39,9 @@ function handleSubmit(){
 
 function toggle(todo){
 
-  todos.map((obj)=>(obj.id === todo.id ? {...obj, checked:true} : obj));
-  console.log('toggle', todo)
+  const newTodos = todos.map((obj)=>(obj.id === todo.id ? {...obj, checked:true} : obj));
+  setTodos(newTodos)
+  console.log('toggle', todos)
 }
 
   return(
@@ -64,7 +65,7 @@ function toggle(todo){
             role='button'
             onKeyPress={()=> toggle(todo)}
             tabIndex={0}
-            className='todo'>
+            className={`${todo.checked == true ? 'todo checked' : 'todo'}`}>
               {todo.title}
             </span>
             <button className='remove' type='button'>
