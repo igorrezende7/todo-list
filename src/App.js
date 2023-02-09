@@ -1,31 +1,14 @@
 import React,{useState} from 'react'
 import './App.css';
-import {MdDelete} from 'react-icons/md'
+import NewTodo from './components/NewTodo';
+import TodoList from './components/TodoList';
+
 const App = () =>{
 
-const [value, setvalue] = useState('');
+
 const [todos, setTodos]= useState([])
-const enter = 13
-const esc = 27
 
-
-function onchange(e){
-  setvalue(e.target.value)
-}
-function eraser(){
-  setvalue('')
-}
-
-function onKeyDown(e){
-  if(e.which === enter){
-    handleSubmit();
-  }
-  else if(e.which === esc){
-    eraser()
-  }
-}
-
-function handleSubmit(){
+const onNewTodo = (value) =>{
   setTodos([
     ...todos,
       {
@@ -34,15 +17,19 @@ function handleSubmit(){
         checked: false
       }
     ])
-  eraser();
 }
 
-function toggle(todo){
+function Toggle(todo){
 
-  const newTodos = todos.map((obj)=>(obj.id === todo.id ? {...obj, checked:true} : obj));
+  const newTodos = todos.map((obj)=>(obj.id === todo.id ? {...obj, checked:!todo.checked} : obj));
   setTodos(newTodos)
-  console.log('toggle', todos)
 }
+
+function onRemove(todo){
+  const newTodos = todos.filter((obj)=>obj.id !== todo.id)
+  setTodos(newTodos)
+}
+
 
   return(
     <section id='app' className='container'>
@@ -50,32 +37,9 @@ function toggle(todo){
         <h1 className='title'>ToDo</h1>
       </header>
       <section className='main'>
-      <input className='new-todo'
-      placeholder='O que precisa ser feito'
-      value={value}
-      onChange={onchange}
-      onKeyDown={onKeyDown}
-      />
+        <NewTodo onNewTodo={onNewTodo} />
+        <TodoList todos={todos} Toggle={Toggle} onRemove={onRemove} />
 
-      <ul className='todo-list'>
-        {todos.map((todo)=>(
-          <li  key={todo.id.toString()}>
-            <span
-            onClick={()=> toggle(todo)}
-            role='button'
-            onKeyPress={()=> toggle(todo)}
-            tabIndex={0}
-            className={`${todo.checked == true ? 'todo checked' : 'todo'}`}>
-              {todo.title}
-            </span>
-            <button className='remove' type='button'>
-              <MdDelete size={28}/>
-            </button>
-          </li>
-        )
-
-        )}
-      </ul>
       </section>
    </section>
   )
